@@ -105,10 +105,17 @@ def test_pecrecseq_init():
     assert_equal(record.sequence, '1/1900')
 
 
+def test_format_sequence():
+    record = PecRecSeq('  1 18  0  0  0  0  0  0  0  0  0    0    0    0    0'
+                       '1996199828 55  2AUN1474-41013    N ^C:BASE MODEL - ESI'
+                       ' - w/FRONT DISC BRAKES^C:***    1/1900     ***')
+    assert_equal(record.format_sequence(), '^C:***    1/1900     ***')
+
+
 def test_pecrecseq_str():
-    record = PecRec('  1 18  0  0  0  0  0  0  0  0  0    0    0    0    0'
-                    '1996199828 55  2AUN1474-41013    N ^C:BASE MODEL - ESI'
-                    ' - w/FRONT DISC BRAKES^C:***    1/1900     ***')
+    record = PecRecSeq('  1 18  0  0  0  0  0  0  0  0  0    0    0    0    0'
+                       '1996199828 55  2AUN1474-41013    N ^C:BASE MODEL - ESI'
+                       ' - w/FRONT DISC BRAKES^C:***    1/1900     ***')
     assert_equal(str(record), '  1 18  0  0  0  0  0  0  0  0  0    0    0   '
                               ' 0    01996199828 55  2AUN1474-41013    N '
                               '^C:BASE MODEL - ESI - w/FRONT DISC BRAKES'
