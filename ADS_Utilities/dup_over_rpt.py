@@ -33,6 +33,8 @@ class DupOverRecord(object):
         self.modified_date = record[26]
         self.grouping_id = record[27]
         self.cde_page_seq_num = record[28]
+        self.pec_seq_num = record[28][:record[28].find(' ')] + '/' \
+                           + str(int(record[28][record[28].find(' '):]))
         self.filters_and_options = record[29]
 
 class DupOverRecDelete(DupOverRecord):

@@ -48,6 +48,7 @@ class TestDupOverRecord():
         assert_equal(self.record.modified_date, '08-OCT-13')
         assert_equal(self.record.grouping_id, '1')
         assert_equal(self.record.cde_page_seq_num, '1 0001600')
+        assert_equal(self.record.pec_seq_num, '1/1600')
         assert_equal(self.record.filters_and_options, '')
 
 
@@ -96,5 +97,6 @@ class TestDupOverRecDelete():
         assert_equal(self.record.modified_date, '08-OCT-13')
         assert_equal(self.record.grouping_id, '1')
         assert_equal(self.record.cde_page_seq_num, '1 0001600')
+        assert_equal(self.record.pec_seq_num, '1/1600')
         assert_equal(self.record.filters_and_options, '')
         assert_equal(self.record.delete, 'Y')
