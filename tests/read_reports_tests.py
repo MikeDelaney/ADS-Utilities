@@ -47,6 +47,13 @@ class TestLoadDupesOverlaps():
                    'ROTOQUIET - LIMITED - TOURING - AWD - 5-115MM (HOLE-BOLT '
                    'CIRCLE) VENTED DISC',
                    '287', 'MIKED', '21-Nov-13', '2', '6 0005700', '']
+        self.r5 = ['5', '6', 'CHRYSLER', '2005', '2008', '33', '300 Series',
+                   '0', '', '0', '', '4 WHEEL/ALL WHEEL DRIVE', '30',
+                   'R BRK PADS/SHOES,ROTORS/DRUMS', '30',
+                   'Rear Disc Brake Rotor', '100-53024', '2', 'IWE', 'N', '0',
+                   '0', '',
+                   'ROTOQUIET - EXTRA RECORD',
+                   '287', 'MIKED', '21-Nov-13', '2', '6 0005700', '']
         separator = ['6', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-',
                      '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-',
                      '-', '-', '-', '-', '-', '-', '-', '']
@@ -94,6 +101,14 @@ class TestLoadDupesOverlaps():
         self.r4_delete_reordered.insert(1, self.r4_delete_reordered.pop(28))
         self.r4_delete_reordered.insert(2, self.r4_delete_reordered.pop())
 
+        self.r5_reordered = self.r5[:]
+        self.r5_reordered.insert(1, self.r5_reordered.pop(28))
+        self.r5_delete = self.r5[:]
+        self.r5_delete.append('')
+        self.r5_delete_reordered = self.r5_delete[:]
+        self.r5_delete_reordered.insert(1, self.r5_delete_reordered.pop(28))
+        self.r5_delete_reordered.insert(2, self.r5_delete_reordered.pop())
+
         separator_delete = separator[:]
         separator_delete.append('')
         separator_delete_reordered = separator_delete[:]
@@ -110,6 +125,7 @@ class TestLoadDupesOverlaps():
                                           '\t'.join(separator) + '\n' +
                                           '\t'.join(self.r3) + '\n' +
                                           '\t'.join(self.r4) + '\n' +
+                                          '\t'.join(self.r5) + '\n' +
                                           '\t'.join(filter_rec) + '\n')
         self.report_2 = StringIO.StringIO('\t'.join(header_reordered) + '\n' +
                                           '\t'.join(self.r1_reordered) + '\n' +
@@ -117,6 +133,7 @@ class TestLoadDupesOverlaps():
                                           '\t'.join(separator) + '\n' +
                                           '\t'.join(self.r3_reordered) + '\n' +
                                           '\t'.join(self.r4_reordered) + '\n' +
+                                          '\t'.join(self.r5_reordered) + '\n' +
                                           '\t'.join(filter_rec) + '\n')
         self.report_3 = StringIO.StringIO('\t'.join(header_delete) + '\n' +
                                           '\t'.join(self.r1_delete) + '\n' +
@@ -124,6 +141,7 @@ class TestLoadDupesOverlaps():
                                           '\t'.join(separator_delete) + '\n' +
                                           '\t'.join(self.r3_delete) + '\n' +
                                           '\t'.join(self.r4_delete) + '\n' +
+                                          '\t'.join(self.r5_delete) + '\n' +
                                           '\t'.join(filter_rec_delete) + '\n')
         self.report_4 = StringIO.StringIO('\t'.join(header_delete_reordered) +
                                           '\n' +
@@ -137,6 +155,8 @@ class TestLoadDupesOverlaps():
                                           '\n' +
                                           '\t'.join(self.r4_delete_reordered) +
                                           '\n' +
+                                          '\t'.join(self.r5_delete_reordered) +
+                                          '\n' +
                                           '\t'.join(filter_rec_delete_reordered)
                                           + '\n')
 
@@ -149,18 +169,22 @@ class TestLoadDupesOverlaps():
         self.r2 = None
         self.r3 = None
         self.r4 = None
+        self.r5 = None
         self.r1_reordered = None
         self.r2_reordered = None
         self.r3_reordered = None
         self.r4_reordered = None
+        self.r5_reordered = None
         self.r1_delete = None
         self.r2_delete = None
         self.r3_delete = None
         self.r4_delete = None
+        self.r5_delete = None
         self.r1_delete_reordered = None
         self.r2_delete_reordered = None
         self.r3_delete_reordered = None
         self.r4_delete_reordered = None
+        self.r5_delete_reordered = None
 
     def test_load_dupes_overlaps_size(self):
         assert_equal(len(load_dupes_overlaps(self.report_1)), 4)
@@ -168,14 +192,35 @@ class TestLoadDupesOverlaps():
         assert_equal(len(load_dupes_overlaps(self.report_3)), 4)
         assert_equal(len(load_dupes_overlaps(self.report_4)), 4)
 
-    def test_should_fail(self):
-        assert_equal(str(DupOverRecord(self.r1)), str(DupOverRecord(self.r2)))
-
     def test_load_dupes_overlaps_values(self):
-        assert_equal(str(load_dupes_overlaps(self.report_1)['6/2000'][0]), str(DupOverRecord(self.r1)))
+        report_dict_1 = load_dupes_overlaps(self.report_1)
+        report_dict_2 = load_dupes_overlaps(self.report_2)
+        report_dict_3 = load_dupes_overlaps(self.report_3)
+        report_dict_4 = load_dupes_overlaps(self.report_4)
 
+        assert_equal(str(report_dict_1['6/2000'][0]), str(DupOverRecord(self.r1)))
+        assert_equal(str(report_dict_1['6/2200'][0]), str(DupOverRecord(self.r2)))
+        assert_equal(str(report_dict_1['6/5600'][0]), str(DupOverRecord(self.r3)))
+        assert_equal(str(report_dict_1['6/5700'][0]), str(DupOverRecord(self.r4)))
+        assert_equal(str(report_dict_1['6/5700'][1]), str(DupOverRecord(self.r5)))
 
+        assert_equal(str(report_dict_2['6/2000'][0]), str(DupOverRecord(self.r1)))
+        assert_equal(str(report_dict_2['6/2200'][0]), str(DupOverRecord(self.r2)))
+        assert_equal(str(report_dict_2['6/5600'][0]), str(DupOverRecord(self.r3)))
+        assert_equal(str(report_dict_2['6/5700'][0]), str(DupOverRecord(self.r4)))
+        assert_equal(str(report_dict_2['6/5700'][1]), str(DupOverRecord(self.r5)))
 
+        assert_equal(str(report_dict_3['6/2000'][0]), str(DupOverRecDelete(self.r1_delete)))
+        assert_equal(str(report_dict_3['6/2200'][0]), str(DupOverRecDelete(self.r2_delete)))
+        assert_equal(str(report_dict_3['6/5600'][0]), str(DupOverRecDelete(self.r3_delete)))
+        assert_equal(str(report_dict_3['6/5700'][0]), str(DupOverRecDelete(self.r4_delete)))
+        assert_equal(str(report_dict_3['6/5700'][1]), str(DupOverRecDelete(self.r5_delete)))
+
+        assert_equal(str(report_dict_4['6/2000'][0]), str(DupOverRecDelete(self.r1_delete)))
+        assert_equal(str(report_dict_4['6/2200'][0]), str(DupOverRecDelete(self.r2_delete)))
+        assert_equal(str(report_dict_4['6/5600'][0]), str(DupOverRecDelete(self.r3_delete)))
+        assert_equal(str(report_dict_4['6/5700'][0]), str(DupOverRecDelete(self.r4_delete)))
+        assert_equal(str(report_dict_4['6/5700'][1]), str(DupOverRecDelete(self.r5_delete)))
 
 
 class TestGetColumnIndexes():
