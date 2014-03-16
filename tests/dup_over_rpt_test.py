@@ -51,6 +51,14 @@ class TestDupOverRecord():
         assert_equal(self.record.pec_seq_num, '1/1600')
         assert_equal(self.record.filters_and_options, '')
 
+    def test_dupoverrecord_str(self):
+        assert_equal(str(self.record), '1, 1, AMC-EAGLE, 1993, 1994, 18, '
+                                       'TALON, 0, , 0, , 4 WHEEL/ALL WHEEL '
+                                       'DRIVE, 28, F BRK HYDRAULICS, 55, '
+                                       'Front Brake Hose, 1474-40300, 2, AUN, '
+                                       'N, 0, 0, , INNER - TSI - AWD, 16, '
+                                       'miked, 08-OCT-13, 1, 1 0001600, ')
+
 
 class TestDupOverRecDelete():
     def setup(self):
@@ -100,3 +108,11 @@ class TestDupOverRecDelete():
         assert_equal(self.record.pec_seq_num, '1/1600')
         assert_equal(self.record.filters_and_options, '')
         assert_equal(self.record.delete, 'Y')
+
+    def test_dupoverrecdelete_str(self):
+        assert_equal(str(self.record), '1, 1, AMC-EAGLE, 1993, 1994, 18, '
+                                       'TALON, 0, , 0, , 4 WHEEL/ALL WHEEL '
+                                       'DRIVE, 28, F BRK HYDRAULICS, 55, '
+                                       'Front Brake Hose, 1474-40300, 2, AUN, '
+                                       'N, 0, 0, , INNER - TSI - AWD, 16, '
+                                       'miked, 08-OCT-13, 1, 1 0001600, , Y')
