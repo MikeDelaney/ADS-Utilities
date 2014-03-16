@@ -57,8 +57,8 @@ class DupOverRecDelete(DupOverRecord):
     def __init__(self, record=['', '', '', '', '', '', '', '', '', '', '',
                                '', '', '', '', '', '', '', '', '', '', '',
                                '', '', '', '', '', '', '', '', '']):
-        self.delete = record.pop()
-        DupOverRecord.__init__(self, record)
+        self.delete = record[-1]
+        DupOverRecord.__init__(self, record[:-1])
 
     def __str__(self):
         return DupOverRecord.__str__(self) + ', ' + self.delete
