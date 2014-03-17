@@ -13,21 +13,19 @@ def load_pecfile_dict(pec_file):
     corresponding PecRecSeq object.
     """
     file_dict = {}
-    try:
-        while True:
-            record = pec_file.readline()[:-1]
-            if record == '':
-                break
+    while True:
+        record = pec_file.readline()[:-1]
+        if record == '':
+            break
+        else:
+            record = pec.PecRecSeq(record)
+            if record.sequence in file_dict:
+                Tk().withdraw()
+                tkMessageBox.showerror('Error', 'Duplicate sequence numbers '
+                                                'exist in PEC file.')
+                sys.exit()
             else:
-                record = pec.PecRecSeq(record)
-                if record.sequence in file_dict:
-                    raise KeyError
-                else:
-                    file_dict[record.sequence] = record
-    except KeyError:
-        Tk().withdraw()
-        tkMessageBox.showerror('Error', 'Duplicate sequence numbers exist in PEC file.')
-        sys.exit()
+                file_dict[record.sequence] = record
     return file_dict
 
 
