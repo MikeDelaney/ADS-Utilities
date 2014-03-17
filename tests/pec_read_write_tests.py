@@ -31,8 +31,13 @@ class TestPecReadWrite():
 
 
     def teardown(self):
+        self.r1 = None
+        self.r2 = None
+        self.r3 = None
+        self.r4 = None
         self.pec_normal = None
         self.pec_dupseq = None
+        self.output_dict = None
 
     def test_load_pecfile_dict(self):
         pec_normal_dict = load_pecfile_dict(self.pec_normal)
