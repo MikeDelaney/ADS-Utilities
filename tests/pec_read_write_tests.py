@@ -45,4 +45,4 @@ class TestPecReadWrite():
         load_pecfile_dict(self.pec_dupseq)
 
     def test_write_pecfile_dict(self):
-        assert_equal(write_pecfile_dict(StringIO.StringIO(''), self.output_dict), self.pec_normal)
+        assert_equal(write_pecfile_dict(StringIO.StringIO(''), self.output_dict).getvalue(), self.pec_normal.getvalue())
