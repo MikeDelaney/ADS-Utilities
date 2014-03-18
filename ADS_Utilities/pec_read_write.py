@@ -1,7 +1,4 @@
 import pec
-from Tkinter import Tk
-import tkMessageBox
-import sys
 
 __author__ = 'miked'
 
@@ -20,10 +17,7 @@ def load_pecfile_dict(pec_file):
         else:
             record = pec.PecRecSeq(record)
             if record.sequence in file_dict:
-                Tk().withdraw()
-                tkMessageBox.showerror('Error', 'Duplicate sequence numbers '
-                                                'exist in PEC file.')
-                sys.exit()
+                return 1
             else:
                 file_dict[record.sequence] = record
     return file_dict
