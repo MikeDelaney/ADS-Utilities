@@ -45,9 +45,8 @@ class TestPecReadWrite():
         assert_equal(str(pec_normal_dict['1/200']), str(PecRecSeq(self.r2)))
         assert_equal(str(pec_normal_dict['2/36500']), str(PecRecSeq(self.r3)))
 
-    @raises(SystemExit)
-    def test_raises_sysexit_load(self):
-        load_pecfile_dict(self.pec_dupseq)
+    def test_load_pecfile_dupseq(self):
+        assert_equal(1, load_pecfile_dict(self.pec_dupseq))
 
     def test_write_pecfile_dict(self):
         assert_equal(write_pecfile_dict(StringIO.StringIO(''), self.output_dict).getvalue(), self.pec_normal.getvalue())
