@@ -165,11 +165,13 @@ class TestApplyResolutions():
                        '13/5200': PecRecSeq(r9), '13/5400': PecRecSeq(r10),
                        '13/5900': PecRecSeq(r11)}
 
-        self.expected = {'1/1600': e1, '1/1700': e2, '1/2600': e3,
-                         '1/2700': e4, '1/6300': e5, '1/6400': e6,
-                         '1/6500': e7, '13/5200': e8, '13/5201': e9,
-                         '13/5202': e10, '13/5203': e11, '13/5400': e12,
-                         '13/5900': e13}
+        self.expected = {'1/1600': PecRecSeq(e1), '1/1700': PecRecSeq(e2),
+                         '1/2600': PecRecSeq(e3), '1/2700': PecRecSeq(e4),
+                         '1/6300': PecRecSeq(e5), '1/6400': PecRecSeq(e6),
+                         '1/6500': PecRecSeq(e7), '13/5200': PecRecSeq(e8),
+                         '13/5201': PecRecSeq(e9), '13/5202': PecRecSeq(e10),
+                         '13/5203': PecRecSeq(e11), '13/5400': PecRecSeq(e12),
+                         '13/5900': PecRecSeq(e13)}
 
     def teardown(self):
         self.dupes = None
@@ -177,22 +179,8 @@ class TestApplyResolutions():
         self.expected = None
 
     def test_apply_resolutions(self):
-        result = apply_resolutions(self.source, self.dupes)
-        assert_equal(len(result), len(self.expected))
-        assert_raises(KeyError, lambda: result['13/4800'])
-        assert_equal(str(result['1/1600']), self.expected['1/1600'])
-        assert_equal(str(result['1/1700']), self.expected['1/1700'])
-        assert_equal(str(result['1/2600']), self.expected['1/2600'])
-        assert_equal(str(result['1/2700']), self.expected['1/2700'])
-        assert_equal(str(result['1/6300']), self.expected['1/6300'])
-        assert_equal(str(result['1/6400']), self.expected['1/6400'])
-        assert_equal(str(result['1/6500']), self.expected['1/6500'])
-        assert_equal(str(result['13/5200']), self.expected['13/5200'])
-        assert_equal(str(result['13/5201']), self.expected['13/5201'])
-        assert_equal(str(result['13/5202']), self.expected['13/5202'])
-        assert_equal(str(result['13/5203']), self.expected['13/5203'])
-        assert_equal(str(result['13/5400']), self.expected['13/5400'])
-        assert_equal(str(result['13/5900']), self.expected['13/5900'])
+        assert_items_equal(apply_resolutions(self.source, self.dupes),
+                           self.expected)
 
     def test_update_record(self):
         pass
