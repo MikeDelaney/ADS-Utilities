@@ -178,33 +178,33 @@ class TestLoadDupesOverlaps():
 
     def test_load_default(self):
         assert_items_equal(load_dupes_overlaps(self.report_1),
-                           {'6/2000': DupOverRecord(self.r1),
-                            '6/2200': DupOverRecord(self.r2),
-                            '6/5600': DupOverRecord(self.r3),
+                           {'6/2000': [DupOverRecord(self.r1)],
+                            '6/2200': [DupOverRecord(self.r2)],
+                            '6/5600': [DupOverRecord(self.r3)],
                             '6/5700': [DupOverRecord(self.r4),
                                        DupOverRecord(self.r5)]})
 
     def test_load_default_reordered(self):
         assert_items_equal(load_dupes_overlaps(self.report_2),
-                           {'6/2000': DupOverRecord(self.r1),
-                            '6/2200': DupOverRecord(self.r2),
-                            '6/5600': DupOverRecord(self.r3),
+                           {'6/2000': [DupOverRecord(self.r1)],
+                            '6/2200': [DupOverRecord(self.r2)],
+                            '6/5600': [DupOverRecord(self.r3)],
                             '6/5700': [DupOverRecord(self.r4),
                                        DupOverRecord(self.r5)]})
 
     def test_load_delete(self):
         assert_items_equal(load_dupes_overlaps(self.report_3),
-                           {'6/2000': DupOverRecDelete(self.r1_delete),
-                            '6/2200': DupOverRecDelete(self.r2_delete),
-                            '6/5600': DupOverRecDelete(self.r3_delete),
+                           {'6/2000': [DupOverRecDelete(self.r1_delete)],
+                            '6/2200': [DupOverRecDelete(self.r2_delete)],
+                            '6/5600': [DupOverRecDelete(self.r3_delete)],
                             '6/5700': [DupOverRecDelete(self.r4_delete),
                                        DupOverRecDelete(self.r5_delete)]})
 
     def test_load_delete_reordered(self):
         assert_items_equal(load_dupes_overlaps(self.report_4),
-                           {'6/2000': DupOverRecDelete(self.r1_delete),
-                            '6/2200': DupOverRecDelete(self.r2_delete),
-                            '6/5600': DupOverRecDelete(self.r3_delete),
+                           {'6/2000': [DupOverRecDelete(self.r1_delete)],
+                            '6/2200': [DupOverRecDelete(self.r2_delete)],
+                            '6/5600': [DupOverRecDelete(self.r3_delete)],
                             '6/5700': [DupOverRecDelete(self.r4_delete),
                                        DupOverRecDelete(self.r5_delete)]})
 
