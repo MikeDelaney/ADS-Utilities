@@ -1,11 +1,13 @@
 from Tkinter import Tk
 from tkFileDialog import askopenfilename
+import tkMessageBox
 import pec
 import dup_over_rpt
 import get_specs
 import pec_read_write
 import read_reports
 import string
+import sys
 
 __author__ = 'miked'
 
@@ -38,6 +40,10 @@ if __name__ == '__main__':
 
     source_file = open(source_filename)
     source_dict = pec_read_write.load_pecfile_dict(source_file)
+    if source_dict == 1:
+        tkMessageBox.showerror('Error', 'Duplicate sequence numbers '
+                                                'exist in PEC file.')
+        sys.exit()
     source_file.close()
 
     output_dict = apply_resolutions(source_dict, dupes_dict)
