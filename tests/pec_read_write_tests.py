@@ -32,10 +32,13 @@ class TestPecReadWrite():
         self.output_dict = None
 
     def test_load_pecfile_dict(self):
-        assert_items_equal(load_pecfile_dict(self.pec_normal), self.output_dict)
+        assert_items_equal(load_pecfile_dict(self.pec_normal),
+                           self.output_dict)
 
     def test_load_pecfile_dupseq(self):
         assert_equal(1, load_pecfile_dict(self.pec_dupseq))
 
     def test_write_pecfile_dict(self):
-        assert_equal(write_pecfile_dict(StringIO.StringIO(''), self.output_dict).getvalue(), self.pec_normal.getvalue())
+        assert_equal(write_pecfile_dict(StringIO.StringIO(''),
+                                        self.output_dict).getvalue(),
+                     self.pec_normal.getvalue())
