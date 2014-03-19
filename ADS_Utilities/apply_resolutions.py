@@ -12,7 +12,10 @@ import sys
 __author__ = 'miked'
 
 
-def update_record(src_record, report_record):
+def increment_seq(sequence):
+    return ''
+
+def update_record(report_record):
     return pec.PecRecSeq()
 
 
@@ -21,7 +24,20 @@ def apply_resolutions(src_dict, report_dict):
     Dict Dict -> Dict
     Produces dict of pec records with changes from dupes report applied
     """
-    return {}
+    results_dict = {}
+    for key in src_dict:
+        if key not in report_dict:
+            results_dict[key] = src_dict[key]
+        else:
+            mkseq = key
+            for i in range(0, len(report_dict[key])):
+                if report_dict[key][i].delete == '':
+                    pass
+                else:
+                    results_dict[mkseq] = update_record(report_dict[key][i])
+                    mkseq = increment_seq(mkseq)
+    return results_dict
+
 
 if __name__ == '__main__':
     Tk().withdraw()
