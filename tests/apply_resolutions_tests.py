@@ -9,17 +9,17 @@ __author__ = 'miked'
 class TestApplyResolutions():
 
     def setup(self):
-        d1 = ['1', '1', 'AMC-EAGLE', '1993', '1994', '18', 'TALON', '0', '',
+        self.d1 = ['1', '1', 'AMC-EAGLE', '1993', '1994', '18', 'TALON', '0', '',
               '0', '', '4 WHEEL/ALL WHEEL DRIVE', '28', 'F BRK HYDRAULICS',
               '55', 'Front Brake Hose', '1474-40300', '2', 'AUN', 'N', '0',
               '0', '', 'INNER - TSI - AWD', '16', 'miked', '8-Oct-13', '1',
               '1 0001600', '', '']
-        d2 = ['2', '1', 'AMC-EAGLE', '1993', '1994', '18', 'TALON', '0', '',
+        self.d2 = ['2', '1', 'AMC-EAGLE', '1993', '1994', '18', 'TALON', '0', '',
               '0', '', 'EXC 4 WHEEL/ALL WHEEL DRIVE', '28', 'F BRK HYDRAULICS',
               '55', 'Front Brake Hose', '1474-40300', '2', 'AUN', 'N', '0',
               '0', '', 'INNER - DL - ES', '17', 'miked', '8-Oct-13', '1',
               '1 0001700', '', '']
-        d3 = ['11', '1', 'AMC-EAGLE', '1996', '1998', '18', 'TALON', '0', '',
+        self.d3 = ['11', '1', 'AMC-EAGLE', '1996', '1998', '18', 'TALON', '0', '',
               '0', '', '4 WHEEL/ALL WHEEL DRIVE', '31', 'R BRK HYDRAULICS',
               '55', 'Rear Brake Hose', '1474-40093', '2', 'AUN', 'N', '0',
               '0', '', '', '63', 'miked', '8-Oct-13', '4', '1 0006300', '', '']
@@ -147,9 +147,9 @@ class TestApplyResolutions():
               ' - VISTA CRUISER^C:***   13/5900     ***'
 
 
-        self.dupes = {'1/1600': DupOverRecDelete(d1),
-                      '1/1700': DupOverRecDelete(d2),
-                      '1/6300': DupOverRecDelete(d3),
+        self.dupes = {'1/1600': DupOverRecDelete(self.d1),
+                      '1/1700': DupOverRecDelete(self.d2),
+                      '1/6300': DupOverRecDelete(self.d3),
                       '1/6400': DupOverRecDelete(d4),
                       '1/6500': DupOverRecDelete(d5),
                       '13/5200': [DupOverRecDelete(d6), DupOverRecDelete(d7),
@@ -174,6 +174,9 @@ class TestApplyResolutions():
                          '13/5900': PecRecSeq(e13)}
 
     def teardown(self):
+        self.d1 = None
+        self.d2 = None
+        self.d3 = None
         self.dupes = None
         self.source = None
         self.expected = None
@@ -182,5 +185,6 @@ class TestApplyResolutions():
         assert_items_equal(apply_resolutions(self.source, self.dupes),
                            self.expected)
 
-    def test_update_record(self):
-        pass
+    def test_update_record_d1(self):
+        #not correct, need to build pec versions of rpt recs
+        assert_equal(update_record(self.d1), PecRecSeq())
