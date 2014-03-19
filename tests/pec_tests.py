@@ -139,6 +139,12 @@ class TestPecRec():
                                        'AUN1474-41013    N ^C:BASE MODEL - '
                                        'ESI - w/FRONT DISC BRAKES')
 
+    def test_pecrec_eq(self):
+        assert_equal(self.record, PecRec('  1 18  0  0  0  0  0  0  0  0  0'
+                                         '    0    0    0    01996199828 55  '
+                                         '2AUN1474-41013    N ^C:BASE MODEL -'
+                                         ' ESI - w/FRONT DISC BRAKES'))
+
 
 class TestPecRecSeq():
 
@@ -263,3 +269,10 @@ class TestPecRecSeq():
                                        'AUN1474-41013    N ^C:BASE MODEL - '
                                        'ESI - w/FRONT DISC BRAKES'
                                        '^C:***    1/1900     ***')
+
+    def test_pecrecseq_eq(self):
+        assert_equal(self.record, PecRecSeq('  1 18  0  0  0  0  0  0  0  0  0'
+                                            '    0    0    0    01996199828 55'
+                                            '  2AUN1474-41013    N ^C:BASE '
+                                            'MODEL - ESI - w/FRONT DISC BRAKES'
+                                            '^C:***    1/1900     ***'))
