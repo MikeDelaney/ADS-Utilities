@@ -12,26 +12,60 @@ import sys
 __author__ = 'miked'
 
 
-def build_model_list(model_string):
-    model_list = ['0', '0', '0', '0', '0', '0']
-    if model_string.find(',') == -1:
-        model_list[0] = model_string
+def build_mdl_eng_list(mdl_eng_string, list_type):
+    """
+    Str Str -> listof Str
+    Produces list of model/engine numbers of appropriate length from given
+    string
+    """
+    if list_type == 'model':
+        new_list = ['0', '0', '0', '0', '0', '0']
     else:
-        new_models = model_string.split(',')
-        for i in range(0, len(new_models)):
-            model_list[i] = new_models[i].strip()
-    return model_list
+        new_list = ['0', '0', '0', '0']
+    if mdl_eng_string.find(',') == -1:
+        new_list[0] = mdl_eng_string
+    else:
+        new_mdl_eng = mdl_eng_string.split(',')
+        for i in range(0, len(new_mdl_eng)):
+            new_list[i] = new_mdl_eng[i].strip()
+    return new_list
 
 
-def build_engine_list(engine_string):
-    return ['0', '0', '0', '0']
+def normalize_spec_text(spec_string):
+    """
+    Str -> Str
+    Produces string with corrected punctuation and with text values matched
+    to spec table
+    """
+    spec_string = spec_string.replace(':', ';')
+    spec_string = spec_string.replace('w/o POWER STEERING',
+                                      'EXC w/POWER STEERING')
+    spec_string = spec_string.replace('w/MAN TRANS', 'EXC w/AUTO TRANS')
+    spec_string = spec_string.replace('w/o AUTO TRANS', 'EXC w/AUTO TRANS')
+    return spec_string
 
 
-def build_spec_list(attrs_string):
-    return ['    0', '    0', '    0', '    0']
+def build_spec_list(attrs_string, spec_dict):
+    """
+    Str Dict -> listof Str
+    Produces list of specs with text translated to coded values
+    """
+    spec_list = ['    0', '    0', '    0', '    0']
+    new_specs = attrs_string.split(';')
+    for i in range(0, len(new_specs)):
+        spec_text = new_specs[i].strip()
+        if spec_text[:3] == 'EXC':
+            spec_list[i] = ' X' + ('  ' + str(spec_dict[spec_text[4:]]))[-3:]
+        else:
+            spec_list[i] = ('     ' + str(spec_dict[spec_text]))[-5:]
+    return spec_list
 
 
 def increment_seq(sequence):
+    """
+    Str -> Str
+    Produces new make/sequence number with sequence incremented by 1
+    """
     slash_loc = sequence.find('/')
     mk = sequence[:slash_loc]
     seq = int(sequence[slash_loc + 1:]) + 1
@@ -39,9 +73,13 @@ def increment_seq(sequence):
 
 
 def update_record(report_record, sequence):
-    models = build_model_list(report_record.model_id)
-    engines = build_engine_list(report_record.engine_id)
-    specs = build_spec_list(report_record.attrs)
+    """
+    DupOverRecDelete Str -> PecRecSeq
+    Produces new PecRecSeq object containing information from report record.
+    """
+    models = build_mdl_eng_list(report_record.model_id, 'model')
+    engines = build_mdl_eng_list(report_record.engine_id, 'engine')
+    specs = build_spec_list(normalize_spec_text(report_record.attrs), spec_dict)
     new_record = pec.PecRecSeq()
     new_record.make = report_record.make_id
     new_record.model_1 = models[0]
@@ -54,10 +92,10 @@ def update_record(report_record, sequence):
     new_record.engine_2 = engines[1]
     new_record.engine_3 = engines[2]
     new_record.engine_4 = engines[3]
-    new_record.spec_1 = specs[0]
-    new_record.spec_2 = specs[1]
-    new_record.spec_3 = specs[2]
-    new_record.spec_4 = specs[3]
+    new_record.spec_1 = pec.SpecificCondition(specs[0])
+    new_record.spec_2 = pec.SpecificCondition(specs[1])
+    new_record.spec_3 = pec.SpecificCondition(specs[2])
+    new_record.spec_4 = pec.SpecificCondition(specs[3])
     new_record.from_year = report_record.from_year
     new_record.to_year = report_record.to_year
     new_record.group = report_record.part_group_id
