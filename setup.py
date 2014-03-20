@@ -1,20 +1,13 @@
-try:
-    from setuptools import setup
-except ImportError:
-    from distutils.core import setup
+from distutils.core import setup
 
-config = {
-    'description': 'Applies corrections in duplicates/overlaps report to source data',
-    'author': 'Mike Delaney',
-    'url': '',
-    'download_url': '',
-    'author_email': 'mdelaney@utexas.edu',
-    'version': '1.0',
-    'install_requires': ['nose', 'mock', 'Tkinter'],
-    'packages': ['tests', 'ADS_Utilities'],
-    'scripts': [],
-    'name': 'ADS Utilities',
-    'license': ''
-}
-
-setup(**config)
+setup(
+    name='ADS Utilities',
+    version='1.0',
+    packages=['tests', 'ADS_Utilities'],
+    scripts=['ADS_Utilities/apply_resolutions.py'],
+    url='',
+    license='',
+    author='Mike Delaney',
+    author_email='mdelaney@utexas.edu',
+    description='Applies corrections in duplicates/overlaps report to source data'
+)
