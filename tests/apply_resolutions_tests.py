@@ -1,5 +1,5 @@
 from nose.tools import *
-from ADS_Utilities.apply_resolutions import apply_resolutions, update_record
+from ADS_Utilities.apply_resolutions import *
 from ADS_Utilities.dup_over_rpt import DupOverRecDelete
 from ADS_Utilities.pec import PecRecSeq
 
@@ -9,17 +9,17 @@ __author__ = 'miked'
 class TestApplyResolutions():
 
     def setup(self):
-        self.d1 = ['1', '1', 'AMC-EAGLE', '1993', '1994', '18', 'TALON', '0', '',
+        d1 = ['1', '1', 'AMC-EAGLE', '1993', '1994', '18', 'TALON', '0', '',
               '0', '', '4 WHEEL/ALL WHEEL DRIVE', '28', 'F BRK HYDRAULICS',
               '55', 'Front Brake Hose', '1474-40300', '2', 'AUN', 'N', '0',
               '0', '', 'INNER - TSI - AWD', '16', 'miked', '8-Oct-13', '1',
               '1 0001600', '', '']
-        self.d2 = ['2', '1', 'AMC-EAGLE', '1993', '1994', '18', 'TALON', '0', '',
+        d2 = ['2', '1', 'AMC-EAGLE', '1993', '1994', '18', 'TALON', '0', '',
               '0', '', 'EXC 4 WHEEL/ALL WHEEL DRIVE', '28', 'F BRK HYDRAULICS',
               '55', 'Front Brake Hose', '1474-40300', '2', 'AUN', 'N', '0',
               '0', '', 'INNER - DL - ES', '17', 'miked', '8-Oct-13', '1',
               '1 0001700', '', '']
-        self.d3 = ['11', '1', 'AMC-EAGLE', '1996', '1998', '18', 'TALON', '0', '',
+        d3 = ['11', '1', 'AMC-EAGLE', '1996', '1998', '18', 'TALON', '0', '',
               '0', '', '4 WHEEL/ALL WHEEL DRIVE', '31', 'R BRK HYDRAULICS',
               '55', 'Rear Brake Hose', '1474-40093', '2', 'AUN', 'N', '0',
               '0', '', '', '63', 'miked', '8-Oct-13', '4', '1 0006300', '', '']
@@ -147,16 +147,16 @@ class TestApplyResolutions():
               ' - VISTA CRUISER^C:***   13/5900     ***'
 
 
-        self.dupes = {'1/1600': DupOverRecDelete(self.d1),
-                      '1/1700': DupOverRecDelete(self.d2),
-                      '1/6300': DupOverRecDelete(self.d3),
-                      '1/6400': DupOverRecDelete(d4),
-                      '1/6500': DupOverRecDelete(d5),
+        self.dupes = {'1/1600': [DupOverRecDelete(d1)],
+                      '1/1700': [DupOverRecDelete(d2)],
+                      '1/6300': [DupOverRecDelete(d3)],
+                      '1/6400': [DupOverRecDelete(d4)],
+                      '1/6500': [DupOverRecDelete(d5)],
                       '13/5200': [DupOverRecDelete(d6), DupOverRecDelete(d7),
                                   DupOverRecDelete(d8), DupOverRecDelete(d9)],
-                      '13/5900': DupOverRecDelete(d10),
-                      '13/4800': DupOverRecDelete(d11),
-                      '13/5400': DupOverRecDelete(d12)}
+                      '13/5900': [DupOverRecDelete(d10)],
+                      '13/4800': [DupOverRecDelete(d11)],
+                      '13/5400': [DupOverRecDelete(d12)]}
 
         self.source = {'1/1600': PecRecSeq(r1), '1/1700': PecRecSeq(r2),
                        '1/2600': PecRecSeq(r3), '1/2700': PecRecSeq(r4),
@@ -174,9 +174,6 @@ class TestApplyResolutions():
                          '13/5900': PecRecSeq(e13)}
 
     def teardown(self):
-        self.d1 = None
-        self.d2 = None
-        self.d3 = None
         self.dupes = None
         self.source = None
         self.expected = None
@@ -185,6 +182,160 @@ class TestApplyResolutions():
         assert_items_equal(apply_resolutions(self.source, self.dupes),
                            self.expected)
 
+
+class TestUpdateRecord():
+
+    def setup(self):
+        self.d1 = DupOverRecDelete(['1', '1', 'AMC-EAGLE', '1993', '1994',
+                                    '18', 'TALON', '0', '', '0', '',
+                                    '4 WHEEL/ALL WHEEL DRIVE', '28',
+                                    'F BRK HYDRAULICS', '55',
+                                    'Front Brake Hose', '1474-40300', '2',
+                                    'AUN', 'N', '0', '0', '',
+                                    'INNER - TSI - AWD', '16', 'miked',
+                                    '8-Oct-13', '1', '1 0001600', '', ''])
+        self.d1_result = PecRecSeq('  1 18  0  0  0  0  0  0  0  0  0  168   '
+                                   ' 0    0    01993199428 55  2AUN1474-40300'
+                                   '    N ^C:INNER - TSI - AWD'
+                                   '^C:***    1/1600     ***')
+        self.d2 = DupOverRecDelete(['2', '1', 'AMC-EAGLE', '1993', '1994',
+                                    '18', 'TALON', '0', '', '0', '',
+                                    'EXC 4 WHEEL/ALL WHEEL DRIVE', '28',
+                                    'F BRK HYDRAULICS', '68',
+                                    'Front Brake Hose', '1474-40300', '2',
+                                    'AUN', 'N', '0', '0', '',
+                                    'INNER - DL - ES', '17', 'miked',
+                                    '8-Oct-13', '1', '1 0001700', '', ''])
+        self.d2_result = PecRecSeq('  1 18  0  0  0  0  0  0  0  0  0 X168   '
+                                   ' 0    0    01993199428 68  2AUN1474-40300'
+                                   '    N ^C:INNER - DL - ES'
+                                   '^C:***    1/1700     ***')
+        self.models2 = DupOverRecDelete(['1', '1', 'AMC-EAGLE', '1993',
+                                         '1994', '18, 22', 'TALON', '0', '',
+                                         '0', '', '4 WHEEL/ALL WHEEL DRIVE',
+                                         '28', 'F BRK HYDRAULICS', '55',
+                                         'Front Brake Hose', '1474-40300',
+                                         '2', 'AUN', 'N', '0', '0', '',
+                                         'INNER - TSI - AWD', '16', 'miked',
+                                         '8-Oct-13', '1', '1 0001600', '', ''])
+        self.models2_result = PecRecSeq('  1 18 22  0  0  0  0  0  0  0  0  '
+                                        '168    0    0    01993199428 55  2AUN'
+                                        '1474-40300    N ^C:INNER - TSI - AWD'
+                                        '^C:***    1/1600     ***')
+        self.eng3 = DupOverRecDelete(['1', '1', 'AMC-EAGLE', '1993', '1994',
+                                      '18', 'TALON', '0', '', '1, 2, 3', '',
+                                      '4 WHEEL/ALL WHEEL DRIVE', '28',
+                                      'F BRK HYDRAULICS', '55',
+                                      'Front Brake Hose', '1474-40300', '2',
+                                      'AUN', 'N', '0', '0', '',
+                                      'INNER - TSI - AWD', '16', 'miked',
+                                      '8-Oct-13', '1', '1 0001600', '', ''])
+        self.eng3_result = PecRecSeq('  1 18  0  0  0  0  0  1  2  3  0  168 '
+                                     '   0    0    01993199428 55  2AUN'
+                                     '1474-40300    N ^C:INNER - TSI - AWD'
+                                     '^C:***    1/1600     ***')
+        self.spec2 = DupOverRecDelete(['1', '1', 'AMC-EAGLE', '1993', '1994',
+                                       '18', 'TALON', '0', '', '0', '',
+                                       '4 WHEEL/ALL WHEEL DRIVE, '
+                                       'w/4 WHEEL DISC', '28',
+                                       'F BRK HYDRAULICS', '55',
+                                       'Front Brake Hose', '1474-40300', '2',
+                                       'AUN', 'N', '0', '0', '',
+                                       'INNER - TSI - AWD', '16', 'miked',
+                                       '8-Oct-13', '1', '1 0001600', '', ''])
+        self.spec2_result = PecRecSeq('  1 18  0  0  0  0  0  0  0  0  0  168'
+                                      '  138    0    01993199428 55  2AUN'
+                                      '1474-40300    N ^C:INNER - TSI - AWD'
+                                      '^C:***    1/1600     ***')
+
+    def teardown(self):
+        self.d1 = None
+        self.d1_result = None
+        self.d2 = None
+        self.d2_result = None
+        self.models2 = None
+        self.models2_result = None
+        self.eng3 = None
+        self.eng3_result = None
+        self.spec2 = None
+        self.spec2_result = None
+
     def test_update_record_d1(self):
-        #not correct, need to build pec versions of rpt recs
-        assert_equal(update_record(self.d1), PecRecSeq())
+        assert_equal(update_record(self.d1, self.d1.pec_seq_num),
+                     self.d1_result)
+
+    def test_update_record_d2(self):
+        assert_equal(update_record(self.d2, self.d2.pec_seq_num),
+                     self.d2_result)
+
+    def test_update_record_models2(self):
+        assert_equal(update_record(self.models2, self.models2.pec_seq_num),
+                     self.models2_result)
+
+    def test_update_record_eng3(self):
+        assert_equal(update_record(self.eng3, self.eng3.pec_seq_num),
+                     self.eng3_result)
+
+    def test_update_record_spec2(self):
+        assert_equal(update_record(self.spec2, self.spec2.pec_seq_num),
+                     self.spec2_result)
+
+
+class TestBuildSpecList():
+
+    def setup(self):
+        self.specs = {u'w/POWER STEERING': 164,
+                      u'4 WHEEL/ALL WHEEL DRIVE': 168}
+
+    def teardown(self):
+        self.specs = None
+
+    def test_build_spec_list_1(self):
+        assert_equal(build_spec_list('EXC w/POWER STEERING', self.specs),
+                     [' X164', '    0', '    0', '    0'])
+
+    def test_build_spec_list_2(self):
+        assert_equal(build_spec_list('w/POWER STEERING; '
+                                     '4 WHEEL/ALL WHEEL DRIVE', self.specs),
+                     ['  164', '  168', '    0', '    0'])
+
+
+def test_increment_seq_1():
+    assert_equal(increment_seq('1/1600'), '1/1601')
+
+
+def test_increment_seq_2():
+    assert_equal(increment_seq('31/5305'), '31/5306')
+
+
+def test_build_mdl_eng_list_1():
+    assert_equal(build_mdl_eng_list('1', 'model'), ['1', '0', '0', '0', '0', '0'])
+
+
+def test_build_mdl_eng_list_2():
+    assert_equal(build_mdl_eng_list('1, 2', 'model'), ['1', '2', '0', '0', '0', '0'])
+
+
+def test_build_mdl_eng_list_all():
+    assert_equal(build_mdl_eng_list('1, 2, 3, 4, 5, 6', 'model'), ['1', '2', '3', '4', '5', '6'])
+
+
+def test_normalize_spec_text_colon():
+    assert_equal(normalize_spec_text('w/4 WHEEL DISC: '
+                                     '4 WHEEL/ALL WHEEL DRIVE'),
+                 'w/4 WHEEL DISC; 4 WHEEL/ALL WHEEL DRIVE')
+
+
+def test_normalize_spec_text_pwr_stg():
+    assert_equal(normalize_spec_text('w/o POWER STEERING'),
+                 'EXC w/POWER STEERING')
+
+
+def test_normalize_spec_text_mt():
+    assert_equal(normalize_spec_text('w/MAN TRANS'), 'EXC w/AUTO TRANS')
+
+
+def test_normalize_spec_text_at():
+    assert_equal(normalize_spec_text('w/o AUTO TRANS'), 'EXC w/AUTO TRANS')
+
+
