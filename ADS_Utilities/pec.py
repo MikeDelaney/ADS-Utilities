@@ -37,8 +37,9 @@ class PecRec(object):
         self.flag = rec_str[87:88]
         self.comment = rec_str[88:]
 
-    def __cmp__(self, other):
-        return self.__dict__ == other.__dict__
+    def __eq__(self, other):
+        if type(self) == type(other):
+            return str(self) == str(other)
 
     def __str__(self):
         return (('   ' + self.make)[-3:] +
