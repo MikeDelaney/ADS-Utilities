@@ -1,10 +1,10 @@
 from Tkinter import Tk
 from tkFileDialog import askopenfilename
 import tkMessageBox
-import pec
-import get_specs
-import pec_read_write
-import read_reports
+import ADS_Utilities.pec as pec
+import ADS_Utilities.get_specs as get_specs
+import ADS_Utilities.pec_read_write as pec_read_write
+import ADS_Utilities.read_reports as read_reports
 import string
 import sys
 
