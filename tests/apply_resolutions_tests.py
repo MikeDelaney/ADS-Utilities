@@ -236,7 +236,7 @@ class TestUpdateRecord():
                                      '^C:***    1/1600     ***')
         self.spec2 = DupOverRecDelete(['1', '1', 'AMC-EAGLE', '1993', '1994',
                                        '18', 'TALON', '0', '', '0', '',
-                                       '4 WHEEL/ALL WHEEL DRIVE, '
+                                       '4 WHEEL/ALL WHEEL DRIVE; '
                                        'w/4 WHEEL DISC', '28',
                                        'F BRK HYDRAULICS', '55',
                                        'Front Brake Hose', '1474-40300', '2',
@@ -247,6 +247,8 @@ class TestUpdateRecord():
                                       '  138    0    01993199428 55  2AUN'
                                       '1474-40300    N ^C:INNER - TSI - AWD'
                                       '^C:***    1/1600     ***')
+        self.spec_dict = {u'w/4 WHEEL DRUM': 136, u'w/FT DISC/RR DRUM': 137,
+                          u'w/4 WHEEL DISC': 138, u'4 WHEEL/ALL WHEEL DRIVE': 168}
 
     def teardown(self):
         self.d1 = None
@@ -259,25 +261,31 @@ class TestUpdateRecord():
         self.eng3_result = None
         self.spec2 = None
         self.spec2_result = None
+        self.spec_dict = None
 
     def test_update_record_d1(self):
-        assert_equal(update_record(self.d1, self.d1.pec_seq_num),
-                     self.d1_result)
+        assert_equal(str(update_record(self.d1, self.d1.pec_seq_num,
+                                   self.spec_dict)),
+                     str(self.d1_result))
 
     def test_update_record_d2(self):
-        assert_equal(update_record(self.d2, self.d2.pec_seq_num),
+        assert_equal(update_record(self.d2, self.d2.pec_seq_num,
+                                   self.spec_dict),
                      self.d2_result)
 
     def test_update_record_models2(self):
-        assert_equal(update_record(self.models2, self.models2.pec_seq_num),
+        assert_equal(update_record(self.models2, self.models2.pec_seq_num,
+                                   self.spec_dict),
                      self.models2_result)
 
     def test_update_record_eng3(self):
-        assert_equal(update_record(self.eng3, self.eng3.pec_seq_num),
+        assert_equal(update_record(self.eng3, self.eng3.pec_seq_num,
+                                   self.spec_dict),
                      self.eng3_result)
 
     def test_update_record_spec2(self):
-        assert_equal(update_record(self.spec2, self.spec2.pec_seq_num),
+        assert_equal(update_record(self.spec2, self.spec2.pec_seq_num,
+                                   self.spec_dict),
                      self.spec2_result)
 
 
@@ -337,5 +345,21 @@ def test_normalize_spec_text_mt():
 
 def test_normalize_spec_text_at():
     assert_equal(normalize_spec_text('w/o AUTO TRANS'), 'EXC w/AUTO TRANS')
+
+
+def test_format_comment_blank():
+    assert_equal(format_comment(''), '')
+
+
+def test_format_comment_single_line():
+    assert_equal(format_comment('BENDIX FRONT CALIPERS'),
+                 '^C:BENDIX FRONT CALIPERS')
+
+
+def test_format_comment_multiline():
+    assert_equal(format_comment('INNER - 10MM X 155MM - GL - GLS - GT - JAZZ'
+                                '~TDI - OLD BODY STYLE'),
+                 '^C:INNER - 10MM X 155MM - GL - GLS - GT - JAZZ'
+                 '^C:TDI - OLD BODY STYLE')
 
 
