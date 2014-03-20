@@ -2,7 +2,6 @@ from Tkinter import Tk
 from tkFileDialog import askopenfilename
 import tkMessageBox
 import pec
-import dup_over_rpt
 import get_specs
 import pec_read_write
 import read_reports
