@@ -173,13 +173,19 @@ class TestApplyResolutions():
                          '13/5203': PecRecSeq(e11), '13/5400': PecRecSeq(e12),
                          '13/5900': PecRecSeq(e13)}
 
+        self.spec_dict = {u'w/4 WHEEL DRUM': 136, u'w/FT DISC/RR DRUM': 137,
+                          u'w/4 WHEEL DISC': 138,
+                          u'4 WHEEL/ALL WHEEL DRIVE': 168}
+
+
     def teardown(self):
         self.dupes = None
         self.source = None
         self.expected = None
+        self.spec_dict = None
 
     def test_apply_resolutions(self):
-        assert_items_equal(apply_resolutions(self.source, self.dupes),
+        assert_items_equal(apply_resolutions(self.source, self.dupes, self.spec_dict),
                            self.expected)
 
 
@@ -264,9 +270,9 @@ class TestUpdateRecord():
         self.spec_dict = None
 
     def test_update_record_d1(self):
-        assert_equal(str(update_record(self.d1, self.d1.pec_seq_num,
-                                   self.spec_dict)),
-                     str(self.d1_result))
+        assert_equal(update_record(self.d1, self.d1.pec_seq_num,
+                                   self.spec_dict),
+                     self.d1_result)
 
     def test_update_record_d2(self):
         assert_equal(update_record(self.d2, self.d2.pec_seq_num,
@@ -297,6 +303,10 @@ class TestBuildSpecList():
 
     def teardown(self):
         self.specs = None
+
+    def test_build_spec_list_none(self):
+        assert_equal(build_spec_list('', self.specs),
+                     ['    0', '    0', '    0', '    0'])
 
     def test_build_spec_list_1(self):
         assert_equal(build_spec_list('EXC w/POWER STEERING', self.specs),
