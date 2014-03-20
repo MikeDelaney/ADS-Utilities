@@ -4,7 +4,7 @@ setup(
     name='ADS Utilities',
     version='1.0',
     packages=['tests', 'ADS_Utilities'],
-    scripts=['ADS_Utilities/apply_resolutions.py'],
+    scripts=['bin/apply_resolutions.py'],
     url='',
     license='',
     author='Mike Delaney',
