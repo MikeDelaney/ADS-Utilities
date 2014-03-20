@@ -1,7 +1,9 @@
 from nose.tools import *
-from ADS_Utilities.apply_resolutions import *
+
+from bin.apply_resolutions import *
 from ADS_Utilities.dup_over_rpt import DupOverRecDelete
 from ADS_Utilities.pec import PecRecSeq
+
 
 __author__ = 'miked'
 
