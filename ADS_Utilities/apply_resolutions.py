@@ -116,7 +116,10 @@ def update_record(report_record, sequence, spec_dict):
     new_record.lc = report_record.cat_line_cd
     new_record.pn = report_record.part_num
     new_record.block_flag = report_record.block_cd
-    new_record.flag = report_record.flag
+    if report_record.flag == '':
+        new_record.flag = ' '
+    else:
+        new_record.flag = report_record.flag
     new_record.comment = comment
     new_record.sequence = sequence
     return new_record
