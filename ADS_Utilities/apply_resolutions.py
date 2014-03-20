@@ -45,6 +45,17 @@ def normalize_spec_text(spec_string):
     return spec_string
 
 
+def format_comment(comment):
+    """
+    Str -> Str
+    Produces string with '^C:' as leading text delimiter and as new line
+    indicator.
+    """
+    if len(comment) == 0:
+        return comment
+    return '^C:' + comment.replace('~', '^C:')
+
+
 def build_spec_list(attrs_string, spec_dict):
     """
     Str Dict -> listof Str
@@ -72,7 +83,7 @@ def increment_seq(sequence):
     return mk + '/' + str(seq)
 
 
-def update_record(report_record, sequence):
+def update_record(report_record, sequence, spec_dict):
     """
     DupOverRecDelete Str -> PecRecSeq
     Produces new PecRecSeq object containing information from report record.
@@ -80,6 +91,7 @@ def update_record(report_record, sequence):
     models = build_mdl_eng_list(report_record.model_id, 'model')
     engines = build_mdl_eng_list(report_record.engine_id, 'engine')
     specs = build_spec_list(normalize_spec_text(report_record.attrs), spec_dict)
+    comment = format_comment(report_record.comment_text)
     new_record = pec.PecRecSeq()
     new_record.make = report_record.make_id
     new_record.model_1 = models[0]
@@ -105,7 +117,7 @@ def update_record(report_record, sequence):
     new_record.pn = report_record.part_num
     new_record.block_flag = report_record.block_cd
     new_record.flag = report_record.flag
-    new_record.comment = report_record.comment_text
+    new_record.comment = comment
     new_record.sequence = sequence
     return new_record
 
