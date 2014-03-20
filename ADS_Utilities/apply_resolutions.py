@@ -62,6 +62,8 @@ def build_spec_list(attrs_string, spec_dict):
     Produces list of specs with text translated to coded values
     """
     spec_list = ['    0', '    0', '    0', '    0']
+    if len(attrs_string) == 0:
+        return spec_list
     new_specs = attrs_string.split(';')
     for i in range(0, len(new_specs)):
         spec_text = new_specs[i].strip()
@@ -125,7 +127,7 @@ def update_record(report_record, sequence, spec_dict):
     return new_record
 
 
-def apply_resolutions(src_dict, report_dict):
+def apply_resolutions(src_dict, report_dict, spec_dict):
     """
     Dict Dict -> Dict
     Produces dict of pec records with changes from dupes report applied
@@ -137,10 +139,10 @@ def apply_resolutions(src_dict, report_dict):
         else:
             mkseq = key
             for i in range(0, len(report_dict[key])):
-                if report_dict[key][i].delete == '':
+                if report_dict[key][i].delete == 'Y':
                     pass
                 else:
-                    results_dict[mkseq] = update_record(report_dict[key][i], mkseq)
+                    results_dict[mkseq] = update_record(report_dict[key][i], mkseq, spec_dict)
                     mkseq = increment_seq(mkseq)
     return results_dict
 
@@ -168,7 +170,7 @@ if __name__ == '__main__':
         sys.exit()
     source_file.close()
 
-    output_dict = apply_resolutions(source_dict, dupes_dict)
+    output_dict = apply_resolutions(source_dict, dupes_dict, spec_dict)
 
     dest_file = open(dest_filename, 'w')
     dest_file = pec_read_write.write_pecfile_dict(dest_file, output_dict)
