@@ -2,7 +2,12 @@ ADS-Utilities
 =============
 
 Allows resolving duplicates/overlaps directly in reports and applying changes to source data without
-use of a separate edit facility (PET).
+use of PET for editing.
+
+Requires:
+=========
+1. Updated copy of svt.mdb in C:\Wip\_VALID_TABLES folder
+2. Python 2.7
 
 To Use:
 =======
