@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/MikeDelaney/ADS-Utilities.svg?branch=master)](https://travis-ci.org/MikeDelaney/ADS-Utilities)
+
 ADS-Utilities
 =============
 
